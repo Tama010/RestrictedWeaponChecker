@@ -7,6 +7,18 @@ local _prohibitedWeaponList = {
     "weapons.bombs.RN-24",
 }
 
+-- 禁止された兵器であるか判定
+function isProhibitedWeapon(_weapon)
+
+    for _, _prohibitedWeapon in pairs(_prohibitedWeaponList) do
+        if _prohibitedWeapon ==  _weapon.desc.typeName then
+            return true
+        end
+    end
+       
+    return false
+end
+
 function RestrictWeaponScript:onEvent(event)
 		
 	if event.id == world.event.S_EVENT_TAKEOFF then -- 離陸を検知
@@ -20,24 +32,13 @@ function RestrictWeaponScript:onEvent(event)
             for _i, _weapon in pairs(_ammo) do
                 --trigger.action.outText("搭載兵器：".. _weapon.desc.typeName,10,false)
                 if isProhibitedWeapon(_weapon) then
+                    --trigger.action.explosion(_unit:getPoint(), 10)
                     _unit:destroy()
                     return
                 end
             end
         end
 	end
-
-    -- 禁止された兵器であるか判定
-    function isProhibitedWeapon(_weapon)
-
-        for _, _prohibitedWeapon in pairs(_prohibitedWeaponList) do
-            if _prohibitedWeapon ==  _weapon.desc.typeName then
-                return true
-            end
-        end
-        
-        return false
-    end
 end
     
 world.addEventHandler(RestrictWeaponScript)
